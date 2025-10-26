@@ -1,0 +1,45 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 20px;
+  text-align: center;
+}
+
+h1 {
+  margin-bottom: 30px;
+  color: #333;
+}
+
+#flag-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  justify-items: center;
+}
+
+.flag-card {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  padding: 10px;
+  width: 90%;
+  max-width: 250px;
+  transition: transform 0.2s ease;
+}
+
+.flag-card:hover {
+  transform: scale(1.05);
+}
+
+.flag-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.flag-name {
+  margin-top: 10px;
+  font-weight: bold;
+  color: #333;
+}

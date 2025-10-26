@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlagMaster Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="flag_master_flags_cleaned.js"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                500: '#3B82F6',
+              },
+              secondary: {
+                500: '#10B981',
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <style>
+      .flag-container {
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+      }
+      .flag-container:hover {
+        transform: translateY(-5px);
+      }
+      .option:hover {
+        transform: scale(1.03);
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .fade-in {
+        animation: fadeIn 0.5s ease-out forwards;
+      }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+  <!-- Header -->
+  <header class="bg-primary-500 text-white py-6 shadow-lg">
+    <div class="container mx-auto px-4 text-center">
+      <h1 class="text-3xl md:text-4xl font-bold">FlagMaster Quiz Frenzy 🚩</h1>
+      <p class="mt-2 text-xl">Test your knowledge of world flags!</p>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-grow container mx-auto px-4 py-8">
+    <div class="max-w-3xl mx-auto bg-white rounded-xl shadow-md overflow-hidden p-6">
+      <!-- Score Display -->
+      <div class="flex justify-between items-center mb-8">
+        <div class="text-lg font-semibold text-gray-700">
+          <span class="text-primary-500">Score:</span> 
+          <span id="score">0</span>
+        </div>
+        <div class="text-lg font-semibold text-gray-700">
+          <span class="text-secondary-500">Question:</span> 
+          <span id="question-count">1/10</span>
+        </div>
+      </div>
+
+      <!-- Flag Display -->
+      <div class="mb-10 text-center fade-in">
+        <div class="flag-container bg-gray-200 rounded-lg p-4 inline-block">
+          <img id="flag-image" src="" alt="Country Flag" class="max-h-40 mx-auto object-contain">
+        </div>
+      </div>
+
+      <!-- Options -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+        <button class="option bg-white border-2 border-gray-200 rounded-lg p-4 text-lg font-medium hover:border-primary-500 transition-all duration-300" onclick="checkAnswer(0)">
+          <span id="option0"></span>
+        </button>
+        <button class="option bg-white border-2 border-gray-200 rounded-lg p-4 text-lg font-medium hover:border-primary-500 transition-all duration-300" onclick="checkAnswer(1)">
+          <span id="option1"></span>
+        </button>
+        <button class="option bg-white border-2 border-gray-200 rounded-lg p-4 text-lg font-medium hover:border-primary-500 transition-all duration-300" onclick="checkAnswer(2)">
+          <span id="option2"></span>
+        </button>
+        <button class="option bg-white border-2 border-gray-200 rounded-lg p-4 text-lg font-medium hover:border-primary-500 transition-all duration-300" onclick="checkAnswer(3)">
+          <span id="option3"></span>
+        </button>
+      </div>
+
+      <!-- Feedback & Next Button -->
+      <div class="text-center">
+        <p id="feedback" class="text-lg mb-4 h-6"></p>
+        <button id="next-btn" class="bg-secondary-500 hover:bg-secondary-600 text-white font-bold py-3 px-8 rounded-full text-lg transition-all duration-300 opacity-0 transform translate-y-5" onclick="nextQuestion()">
+          Next Question <i data-feather="arrow-right" class="ml-2"></i>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-6">
+    <div class="container mx-auto px-4 text-center">
+      <p>FlagMaster Quiz Frenzy by vishal | Test your flag knowledge!</p>
+      <p><a href="flag_master_display.html">Learn More</a></p>
+    </div>
+  </footer>
+
+  <script>
+
+    let currentQuestion = 0;
+    let score = 0;
+    let shuffledQuestions = [];
+
+    // Shuffle array function
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    // Initialize quiz
+    function initQuiz() {
+      shuffledQuestions = shuffleArray([...quizData]);
+      loadQuestion();
+    }
+
+    // Load question
+    function loadQuestion() {
+      if (currentQuestion >= shuffledQuestions.length) {
+        return endQuiz();
+      }
+
+      const question = shuffledQuestions[currentQuestion];
+      document.getElementById('flag-image').src = question.flag;
+      document.getElementById('question-count').textContent = `${currentQuestion + 1}/${shuffledQuestions.length}`;
+
+      // Shuffle options
+      const shuffledOptions = shuffleArray([...question.options]);
+      
+      // Set options
+      for (let i = 0; i < 4; i++) {
+        document.getElementById(`option${i}`).textContent = shuffledOptions[i];
+      }
+    }
+
+    // Check answer
+    function checkAnswer(optionIndex) {
+      const selectedOption = document.getElementById(`option${optionIndex}`).textContent;
+      const correctAnswer = shuffledQuestions[currentQuestion].country;
+      const feedback = document.getElementById('feedback');
+      const nextBtn = document.getElementById('next-btn');
+
+      if (selectedOption === correctAnswer) {
+        feedback.textContent = "Correct! 🎉";
+        feedback.className = "text-lg mb-4 h-6 text-green-500";
+        score++;
+        document.getElementById('score').textContent = score;
+      } else {
+        feedback.textContent = `Wrong! The correct answer is ${correctAnswer}.`;
+        feedback.className = "text-lg mb-4 h-6 text-red-500";
+      }
+
+      // Show next button
+      nextBtn.classList.remove('opacity-0', 'translate-y-5');
+      nextBtn.classList.add('opacity-100', 'translate-y-0');
+
+      // Disable all options
+      document.querySelectorAll('.option').forEach(btn => {
+        btn.disabled = true;
+        if (btn.textContent.trim() === correctAnswer) {
+          btn.classList.add('border-green-500', 'bg-green-50');
+        } else {
+          btn.classList.add('border-red-200', 'bg-red-50');
+        }
+      });
+    }
+
+    // Next question
+    function nextQuestion() {
+      currentQuestion++;
+      document.getElementById('feedback').textContent = '';
+      document.getElementById('next-btn').classList.add('opacity-0', 'translate-y-5');
+      document.getElementById('next-btn').classList.remove('opacity-100', 'translate-y-0');
+
+      // Reset options
+      document.querySelectorAll('.option').forEach(btn => {
+        btn.disabled = false;
+        btn.classList.remove('border-green-500', 'bg-green-50', 'border-red-200', 'bg-red-50');
+      });
+
+      // Add fade-in animation to new question
+      const flagContainer = document.querySelector('.flag-container');
+      flagContainer.classList.remove('fade-in');
+      void flagContainer.offsetWidth; // Trigger reflow
+      flagContainer.classList.add('fade-in');
+
+      loadQuestion();
+    }
+
+    // End quiz
+    function endQuiz() {
+      const mainContent = document.querySelector('main');
+      mainContent.innerHTML = `
+        <div class="max-w-3xl mx-auto bg-white rounded-xl shadow-md overflow-hidden p-8 text-center">
+          <h2 class="text-2xl font-bold text-primary-500 mb-4">Quiz Completed!</h2>
+          <p class="text-xl mb-6">Your final score is <span class="font-bold">${score}/${shuffledQuestions.length}</span></p>
+          <div class="mb-8">
+            <p class="text-lg mb-2">${getResultMessage(score, shuffledQuestions.length)}</p>
+          </div>
+          <button onclick="location.reload()" class="bg-primary-500 hover:bg-primary-600 text-white font-bold py-3 px-8 rounded-full text-lg transition-all duration-300">
+            Play Again <i data-feather="refresh-cw" class="ml-2"></i>
+          </button>
+        </div>
+      `;
+      feather.replace();
+    }
+
+    // Get result message
+    function getResultMessage(score, total) {
+      const percentage = (score / total) * 100;
+      if (percentage >= 90) return "Perfect! You're a flag expert! 🌍";
+      if (percentage >= 70) return "Great job! You know your flags well! 👍";
+      if (percentage >= 50) return "Good effort! Keep practicing! 💪";
+      return "Keep learning! You'll improve! 📚";
+    }
+
+    // Initialize when page loads
+    document.addEventListener('DOMContentLoaded', () => {
+      initQuiz();
+      feather.replace();
+    });
+  </script>
+</body>
+</html>

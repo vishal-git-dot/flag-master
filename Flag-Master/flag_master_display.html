@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Country Flags</title>
+  <link rel="stylesheet" href="flag_master_display.css">
+    <script src="https://cdn.tailwindcss.com"></script>  
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                500: '#3B82F6',
+              },
+              secondary: {
+                500: '#10B981',
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+</head>
+<body>
+    <header class="bg-primary-500 text-white py-6 shadow-lg">
+    <div class="container mx-auto px-4 text-center">
+      <h1 class="text-3xl md:text-4xl font-bold">All Country Flags 🚩</h1>
+      <p class="mt-2 text-xl">Leran More of world flags!</p>
+    </div>
+  </header>
+<br>
+  <div id="flag-gallery"></div>
+<br>
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-6">
+    <div class="container mx-auto px-4 text-center">
+      <p>FlagMaster Quiz Frenzy by vishal | Test your flag knowledge!</p>
+      <p><a href="flag_master.html">Try Quiz</a></p>
+    </div>
+  </footer>
+
+  <script src="flag_master_flags_cleaned.js"></script>
+  <script src="flag_master_display.js"></script>
+</body>
+</html>
